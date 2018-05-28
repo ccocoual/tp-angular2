@@ -1,0 +1,10 @@
+<div class="thumbnail">
+  <img src="{{ data.photo }}" alt="">
+  <div class="caption">
+    <h3>{{ data.title }} - {{ data.price }}€</h3>
+    <p>{{ data.description }}</p>
+    <p>
+      <button class="btn btn-primary" (click)="addToBasketClick(data.price)">Ajoutez au panier</button>
+    </p>
+  </div>
+</div>
