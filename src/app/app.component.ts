@@ -1,54 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Product } from './model';
 
+import { ProductService } from './services/product.service';
+import { CustomerService } from './services/customer.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
-  total: number;
-
   products: Product[];
 
-  constructor() {
-    this.total = 0;
-    this.products = [
-      {
-        title: 'Product 1',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 10,
-        stock: 5,
-      },
-      {
-        title: 'Product 2',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 20,
-        stock: 1,
-      },
-      {
-        title: 'Product 3',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 30,
-        stock: 2,
-      },
-      {
-        title: 'Product 4',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 40,
-        stock: 0,
-      },
-    ];
+  constructor(
+    private productService: ProductService,
+    private customerService: CustomerService,
+    @Inject('welcomeMsg') public title: string
+  ) {
+    this.products = this.productService.getProducts();
   }
 
+  getTotal(): number {
+    return this.customerService.getTotal();
+  }
 
   onAddToBasket(product: Product) {
-    this.total += product.price;
-    product.stock--;
+    this.customerService.addProduct(product);
+    this.productService.decreaseStock(product);
+  }
+
+  isAvailable(product: Product): boolean {
+    return this.productService.isAvailable(product);
   }
 }
