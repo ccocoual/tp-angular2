@@ -47,7 +47,8 @@ export class AppComponent {
   }
 
 
-  onAddToBasket(amount: number) {
-    this.total += amount;
+  onAddToBasket(product: Product) {
+    this.total += product.price;
+    product.stock--;
   }
 }

@@ -12,6 +12,7 @@ describe('AppComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
+
   }));
 
   it('should create the app', async(() => {
@@ -48,10 +49,24 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
 
     const initPrice = 12;
-    const addedPrice = 125;
+    const addedProduct = app.products[0];
+
     app.total = initPrice;
-    app.onAddToBasket(addedPrice);
-    expect(app.total).toBe(initPrice + addedPrice);
+    app.onAddToBasket(addedProduct);
+    expect(app.total).toBe(initPrice + addedProduct.price);
+  }));
+
+  it('should update stock when calling onAddToBasket()', async(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.debugElement.componentInstance;
+
+    const initPrice = 12;
+    const addedProduct = app.products[0];
+    const initStock = addedProduct.stock;
+
+    app.total = initPrice;
+    app.onAddToBasket(addedProduct);
+    expect(addedProduct.stock ).toBe(initStock - 1);
   }));
 
   it('should bind each product component with its product', async(() => {
@@ -64,5 +79,33 @@ describe('AppComponent', () => {
     products.forEach((product, i) => {
       expect(product.data).toBe(app.products[i]);
     });
+  }));
+
+  it('should not display a component with an empty stock', async(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.debugElement.componentInstance;
+    const compiled = fixture.debugElement.nativeElement;
+
+    app.products = [
+      {
+        title: 'Product 1',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        photo: 'http://placehold.it/800x500',
+        price: 10,
+        stock: 5,
+      },
+      {
+        title: 'Product 2',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        photo: 'http://placehold.it/800x500',
+        price: 20,
+        stock: 0,
+      },
+    ];
+
+    fixture.detectChanges();
+    const products = compiled.querySelectorAll('app-product');
+    expect(products.length).toEqual(1);
+    expect(products[0].data).toBe(app.products[0]);
   }));
 });

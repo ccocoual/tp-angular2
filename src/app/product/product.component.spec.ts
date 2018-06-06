@@ -14,6 +14,7 @@ describe('ProductComponent', () => {
     description: 'Je suis le produit 1',
     photo: 'http://produit1',
     price: 12,
+    stock: 1,
   };
 
   beforeEach(async(() => {
@@ -46,5 +47,19 @@ describe('ProductComponent', () => {
     const button = fixture.nativeElement.querySelector('button');
     button.click();
     expect(component.addToBasket.emit).toHaveBeenCalled();
+  });
+
+  it('should not add "last" class if stock > 1', () => {
+    component.data.stock = 2;
+    fixture.detectChanges();
+    const thumbnail = fixture.nativeElement.querySelector('.thumbnail');
+    expect(Array.prototype.includes.call(thumbnail.classList, 'last')).toBe(false);
+  });
+
+  it('should not add "last" class if stock > 1', () => {
+    component.data.stock = 1;
+    fixture.detectChanges();
+    const thumbnail = fixture.nativeElement.querySelector('.thumbnail');
+    expect(Array.prototype.includes.call(thumbnail.classList, 'last')).toBe(true);
   });
 });
