@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { Product } from './model';
 
-import { ProductService } from './services/product.service';
-import { CustomerService } from './services/customer.service';
+import { ProductService, CustomerService } from './services';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

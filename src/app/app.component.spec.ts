@@ -1,14 +1,43 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, inject } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
 import { Product } from './model';
+import { ProductService, CustomerService } from './services';
+
+const testProducts: Product[] = [
+  {title: '', description: '', photo: '', price: 0, stock: 0},
+  {title: '', description: '', photo: '', price: 0, stock: 0},
+];
+class ProductServiceMock {
+  getProducts() {
+    return testProducts;
+  }
+  isAvailable() {
+    return true;
+  }
+  decreaseStock() {}
+}
+
+class CustomerServiceMock {
+  getTotal() {
+    return 12;
+  }
+  addProduct() {}
+}
+
+const welcomeMsg = 'test';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent
+      ],
+      providers: [
+        {provide: ProductService, useClass: ProductServiceMock},
+        {provide: CustomerService, useClass: CustomerServiceMock},
+        {provide: 'welcomeMsg', useValue: welcomeMsg}
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -21,55 +50,27 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   }));
 
-  it('should have a total starting at 0', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.total).toEqual(0);
-  }));
+  it('should have the title bound in the header',
+    inject([CustomerService], (customerService: CustomerService) => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      const compiled = fixture.debugElement.nativeElement;
 
-  it('should render a total of 0 in the header', async(() => {
+      fixture.detectChanges();
+      expect(compiled.querySelector('header').textContent).toContain(welcomeMsg);
+    })
+  );
+
+
+  it('should render a total of 12 in the header', inject([CustomerService], (customerService: CustomerService) => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('header').textContent).toContain(0);
+    expect(compiled.querySelector('header').textContent).toContain(customerService.getTotal());
   }));
 
-  it('should render a total of 35 in the header', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    const compiled = fixture.debugElement.nativeElement;
 
-    app.total = 35;
-    fixture.detectChanges();
-    expect(compiled.querySelector('header').textContent).toContain(35);
-  }));
-
-  it('should update price when calling onAddToBasket()', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-
-    const initPrice = 12;
-    const addedProduct = app.products[0];
-
-    app.total = initPrice;
-    app.onAddToBasket(addedProduct);
-    expect(app.total).toBe(initPrice + addedProduct.price);
-  }));
-
-  it('should update stock when calling onAddToBasket()', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-
-    const initPrice = 12;
-    const addedProduct = app.products[0];
-    const initStock = addedProduct.stock;
-
-    app.total = initPrice;
-    app.onAddToBasket(addedProduct);
-    expect(addedProduct.stock ).toBe(initStock - 1);
-  }));
-
-  it('should bind each product component with its product', async(() => {
+  it('should bind each product component with its product', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     const compiled = fixture.debugElement.nativeElement;
@@ -79,33 +80,40 @@ describe('AppComponent', () => {
     products.forEach((product, i) => {
       expect(product.data).toBe(app.products[i]);
     });
-  }));
+  });
 
-  it('should not display a component with an empty stock', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    const compiled = fixture.debugElement.nativeElement;
+  it('should call addProduct and decreaseStock when onAddToBasket',
+    inject([ProductService, CustomerService], (productService: ProductService, customerService: CustomerService) => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      const product = testProducts[0];
 
-    app.products = [
-      {
-        title: 'Product 1',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 10,
-        stock: 5,
-      },
-      {
-        title: 'Product 2',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 20,
-        stock: 0,
-      },
-    ];
+      spyOn(customerService, 'addProduct');
+      spyOn(productService, 'decreaseStock');
 
-    fixture.detectChanges();
-    const products = compiled.querySelectorAll('app-product');
-    expect(products.length).toEqual(1);
-    expect(products[0].data).toBe(app.products[0]);
-  }));
+      app.onAddToBasket(product);
+      expect(customerService.addProduct).toHaveBeenCalledWith(product);
+      expect(productService.decreaseStock).toHaveBeenCalledWith(product);
+    })
+  );
+
+  it('should not display product which is not available',
+    inject([ProductService], (productService: ProductService) => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      const compiled = fixture.debugElement.nativeElement;
+
+      spyOn(productService, 'isAvailable').and.callFake(product => {
+        if (product === testProducts[0]) {
+          return false;
+        }
+        return true;
+      });
+
+      fixture.detectChanges();
+      const products = compiled.querySelectorAll('app-product');
+      expect(products.length).toBe(1);
+      expect(products[0].data).toBe(app.products[1]);
+    })
+  );
 });
