@@ -19,18 +19,9 @@
   </div>
 
   <div class="row text-center">
-    <div class="col-md-3 col-sm-6 hero-feature">
-      <app-product [data]="products[0]" (addToBasket)="onAddToBasket($event)"></app-product>
-    </div>
-    <div class="col-md-3 col-sm-6 hero-feature">
-      <app-product [data]="products[1]" (addToBasket)="onAddToBasket($event)"></app-product>
-    </div>
-    <div class="col-md-3 col-sm-6 hero-feature">
-      <app-product [data]="products[2]" (addToBasket)="onAddToBasket($event)"></app-product>
-    </div>
-    <div class="col-md-3 col-sm-6 hero-feature">
-      <app-product [data]="products[3]" (addToBasket)="onAddToBasket($event)"></app-product>
-    </div>
+    <ng-container *ngFor="let product of products">
+      <app-product *ngIf="product.stock > 0" [data]="product" (addToBasket)="onAddToBasket($event)"></app-product>
+    </ng-container>
   </div>
 
   <hr>
