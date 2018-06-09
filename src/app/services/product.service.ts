@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../model';
+import { UpperCasePipe } from '@angular/common';
 
 @Injectable()
 export class ProductService {
   products: Product[];
 
-  constructor() {
+  constructor(private uppercasePipe: UpperCasePipe) {
     this.products = [
       {
         title: 'Product 1',
@@ -39,7 +40,7 @@ export class ProductService {
   }
 
   getProducts(): Product[] {
-    return this.products;
+    return this.products.map(product => ({...product, title: this.uppercasePipe.transform(product.title)}));
   }
 
   isTheLast(product: Product): boolean {

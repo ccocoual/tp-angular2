@@ -2,11 +2,19 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { ProductService } from './product.service';
 import { Product } from '../model/product';
+import { Pipe, PipeTransform } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
 
 describe('ProductService', () => {
+
+  @Pipe({name: 'uppercase'})
+  class UpperCasePipeMock implements PipeTransform {
+    transform(value) { return value; }
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ProductService]
+      providers: [ProductService, {provide: UpperCasePipe, useClass: UpperCasePipeMock}],
     });
   });
 

@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductComponent } from './product.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { Product } from '../model';
+import { UpperCasePipe } from '@angular/common';
 
 describe('ProductComponent', () => {
   let component: ProductComponent;
