@@ -8,7 +8,7 @@ import 'rxjs/add/operator/do';
 @Injectable()
 export class CustomerService {
   private API_URL = 'http://localhost:8080/rest/';
-  basket: Product[];
+  basket: Product[] = [];
 
   constructor(private http: HttpClient) {
   }

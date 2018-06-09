@@ -4,6 +4,7 @@ import { ProductService } from './product.service';
 import { Product } from '../model/product';
 import { Pipe, PipeTransform } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('ProductService', () => {
 
@@ -14,14 +15,25 @@ describe('ProductService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ProductService, {provide: UpperCasePipe, useClass: UpperCasePipeMock}],
+      imports: [HttpClientTestingModule],
+      providers: [ProductService, UpperCasePipe],
     });
   });
 
   it('should be created with 4 products',
-    inject([ProductService], (service: ProductService) => {
+    inject([ProductService, HttpTestingController], (service: ProductService, http: HttpTestingController) => {
+      const mockedResponse = [
+        {title: 'abc', description: '', photo: '', price: 0, stock: 0 },
+        {title: 'def', description: '', photo: '', price: 0, stock: 0 }
+      ];
       expect(service).toBeTruthy();
-      expect(service.getProducts().length).toBe(4);
+      service.getProducts().subscribe(products => {
+        expect(products.length).toBe(2);
+        products.forEach(product => {
+          expect(product.title).toBe(product.title.toUpperCase());
+        });
+      });
+      http.expectOne('http://localhost:8080/rest/products').flush(mockedResponse);
     })
   );
 

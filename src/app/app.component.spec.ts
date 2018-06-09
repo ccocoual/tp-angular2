@@ -4,6 +4,8 @@ import { TestBed, async, inject } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Product } from './model';
 import { ProductService, CustomerService } from './services';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 const testProducts: Product[] = [
   {title: '', description: '', photo: '', price: 0, stock: 0},
@@ -11,7 +13,7 @@ const testProducts: Product[] = [
 ];
 class ProductServiceMock {
   getProducts() {
-    return testProducts;
+    return Observable.of(testProducts);
   }
   isAvailable() {
     return true;
@@ -20,6 +22,9 @@ class ProductServiceMock {
 }
 
 class CustomerServiceMock {
+  getBasket() {
+    return Observable.of();
+  }
   getTotal() {
     return 12;
   }
@@ -94,7 +99,7 @@ describe('AppComponent', () => {
       const app = fixture.debugElement.componentInstance;
       const product = testProducts[0];
 
-      spyOn(customerService, 'addProduct');
+      spyOn(customerService, 'addProduct').and.returnValue(Observable.of(product));
       spyOn(productService, 'decreaseStock');
 
       app.onAddToBasket(product);
