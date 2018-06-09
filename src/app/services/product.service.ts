@@ -1,46 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../model';
 import { UpperCasePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ProductService {
-  products: Product[];
+  private API_URL = 'http://localhost:8080/rest/';
+  private products: Product[];
 
-  constructor(private uppercasePipe: UpperCasePipe) {
-    this.products = [
-      {
-        title: 'Product 1',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 10,
-        stock: 5,
-      },
-      {
-        title: 'Product 2',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 20,
-        stock: 1,
-      },
-      {
-        title: 'Product 3',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 30,
-        stock: 2,
-      },
-      {
-        title: 'Product 4',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photo: 'http://placehold.it/800x500',
-        price: 40,
-        stock: 0,
-      },
-    ];
-  }
+  constructor(private uppercase: UpperCasePipe, private http: HttpClient) {}
 
-  getProducts(): Product[] {
-    return this.products.map(product => ({...product, title: this.uppercasePipe.transform(product.title)}));
+  getProducts(): Observable<Product[]>  {
+    return this.http.get(this.API_URL + 'products')
+      .map((products: any[]) => {
+        return products.map(product => {
+          return {title: product.title, description: product.description, photo: product.photo, price: product.price, stock: product.stock};
+        });
+      })
+      .map(products => {
+        return products.map(product => {
+          product.title = this.uppercase.transform(product.title);
+          return product;
+        });
+      });
   }
 
   isTheLast(product: Product): boolean {

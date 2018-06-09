@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Product } from './model';
 
 import { ProductService, CustomerService } from './services';
@@ -8,7 +8,7 @@ import { ProductService, CustomerService } from './services';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   products: Product[];
 
   constructor(
@@ -16,7 +16,11 @@ export class AppComponent {
     private customerService: CustomerService,
     @Inject('welcomeMsg') public title: string
   ) {
-    this.products = this.productService.getProducts();
+  }
+
+  ngOnInit() {
+    this.productService.getProducts().subscribe(products => this.products = products);
+    this.customerService.getBasket().subscribe();
   }
 
   getTotal(): number {
@@ -24,8 +28,8 @@ export class AppComponent {
   }
 
   onAddToBasket(product: Product) {
-    this.customerService.addProduct(product);
-    this.productService.decreaseStock(product);
+    this.customerService.addProduct(product)
+      .subscribe(() => this.productService.decreaseStock(product));
   }
 
   isAvailable(product: Product): boolean {
