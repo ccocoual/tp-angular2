@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../model';
+import { Product, Customer } from '../model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -31,4 +31,7 @@ export class CustomerService {
     return this.basket.reduce((total, product) => total + product.price, 0);
   }
 
+  checkout(customer: Customer): Observable<any> {
+    return this.http.post(this.API_URL + 'basket/confirm', customer);
+  }
 }
