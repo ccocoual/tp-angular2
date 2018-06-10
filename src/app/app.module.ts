@@ -1,15 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
+import { UpperCasePipe } from '@angular/common';
+
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProductComponent } from './product/product.component';
-import { ProductService } from './services/product.service';
-import { CustomerService } from './services/customer.service';
-import { UpperCasePipe } from '@angular/common';
+import { HomeComponent } from './home/home.component';
+import { BasketComponent } from './basket/basket.component';
+import { ProductService, CustomerService } from './services';
 import { SortPipe } from './pipes/sort.pipe';
 
-import 'rxjs/add/operator/map';
+const routes: Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'basket', component: BasketComponent}
+];
 
 @NgModule({
   declarations: [
@@ -17,16 +23,20 @@ import 'rxjs/add/operator/map';
     MenuComponent,
     ProductComponent,
     SortPipe,
+    HomeComponent,
+    BasketComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [
     ProductService,
     CustomerService,
-    {provide: 'welcomeMsg', useValue: 'Bienvenue sur Zenika Ecommerce'},
     UpperCasePipe,
+    {provide: 'welcomeMsg', useValue: 'Bienvenue sur Zenika Ecommerce'},
+    {provide: LOCALE_ID, useValue: 'fr-FR'}
   ],
   bootstrap: [AppComponent]
 })
