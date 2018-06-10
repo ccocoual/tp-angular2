@@ -1,14 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BasketComponent } from './basket.component';
+import { Observable } from 'rxjs/Observable';
+import { CustomerService } from '../services';
+
+class CustomerServiceMock {
+  getBasket() {
+    return Observable.of();
+  }
+  getTotal() {
+    return 12;
+  }
+  addProduct() {}
+}
 
 describe('BasketComponent', () => {
   let component: BasketComponent;
   let fixture: ComponentFixture<BasketComponent>;
 
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BasketComponent ]
+      declarations: [ BasketComponent ],
+      providers: [
+        {provide: CustomerService, useClass: CustomerServiceMock},
+      ],
     })
     .compileComponents();
   }));
