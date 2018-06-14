@@ -52,7 +52,7 @@
                   "with": "src/environments/browser/environment.prod.ts"
                 }
               ],
-              "serviceWorker": true
+              "serviceWorker": false
             }
           }
         },

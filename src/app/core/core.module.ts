@@ -11,6 +11,7 @@ import {
   CommonModule,
   UpperCasePipe,
   APP_BASE_HREF,
+  registerLocaleData,
 } from '@angular/common';
 
 import {
@@ -18,6 +19,8 @@ import {
   ProductService,
 } from './service'
 
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
 
 @NgModule({
   imports: [CommonModule],
