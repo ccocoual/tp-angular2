@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { ServerModule } from '@angular/platform-server';
-import { AppModule } from './app.module';
+import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader';
+
+import { AppBrowserModule } from './app.browser.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
   imports: [
+    AppBrowserModule,
     ServerModule,
-    AppModule
+    ModuleMapLoaderModule
   ],
-  bootstrap: [AppComponent]
+  providers: [
+    // Add universal-only providers here
+  ],
+  bootstrap: [ AppComponent ],
 })
-export class AppServerModule {
-}
+export class AppServerModule {}

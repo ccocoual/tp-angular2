@@ -1,11 +1,11 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, Inject, LOCALE_ID, PLATFORM_ID, APP_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HttpModule } from '@angular/http';
 
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, isPlatformBrowser } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
@@ -34,5 +34,12 @@ import { ZecommerceModule } from './zecommerce/zecommerce.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
+export class AppBrowserModule {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(APP_ID) private appId: string) {
+    const platform = isPlatformBrowser(platformId) ?
+      'in the browser' : 'on the server';
+    console.log(`Running ${platform} with appId=${appId}`);
+  }
 }
