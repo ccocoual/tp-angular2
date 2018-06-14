@@ -2,7 +2,7 @@
   <div class="thumbnail" [ngClass]="{'last': product.stock === 1}">
     <img [src]="product.photo" alt="">
     <div class="caption">
-      <h3>{{ product.title }} - {{ product.price | currency:'EUR':true }}</h3>
+      <h3>{{ product.title }} - {{ product.price | currency:'EUR':'symbol' }}</h3>
       <p>{{ product.description }}</p>
       <p>
         <button class="btn btn-primary" (click)="addToBasket.emit(product)">Ajoutez au panier</button>

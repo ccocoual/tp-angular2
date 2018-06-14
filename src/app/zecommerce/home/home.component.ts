@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
   ProductService,
@@ -6,21 +6,18 @@ import {
 } from '../../core/service';
 import { Product } from '../../core/model';
 
-const appTitle = 'Bienvenue sur Zenika Ecommerce';
+const APP_TITLE = new InjectionToken('APP_TITLE', { providedIn: 'root', factory: () =>  'Bienvenue sur Zenika Ecommerce' });
 
 @Component({
   selector: 'our-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [
-    { provide: 'appTitle', useValue: appTitle }
-  ]
 })
 export class HomeComponent implements OnInit {
   total: number;
   products$: Observable<Product[]>;
 
-  constructor(@Inject('appTitle') public title: string, private productService: ProductService, private customerService: CustomerService) {
+  constructor(@Inject(APP_TITLE) public title: any, private productService: ProductService, private customerService: CustomerService) {
   }
 
   ngOnInit() {

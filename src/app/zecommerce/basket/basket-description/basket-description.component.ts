@@ -16,7 +16,7 @@ import { Product } from '../../../core/model';
         <tr *ngFor="let product of basket">
           <td>{{ product.title }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ product.price | currency:'EUR':true}}</td>
+          <td>{{ product.price | currency:'EUR':'symbol'}}</td>
         </tr>
       </tbody>
     </table>
