@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'our-root',
+  template: `
+    <our-zecommerce></our-zecommerce>
+  `,
 })
-export class AppComponent{
-}
+export class AppComponent {}

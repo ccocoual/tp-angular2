@@ -1,10 +1,10 @@
-import { TpAngular2Page } from './app.po';
+import { TpAngularPage } from './app.po';
 
-describe('tp-angular2 App', () => {
-  let page: TpAngular2Page;
+describe('tp-angular App', () => {
+  let page: TpAngularPage;
 
   beforeEach(() => {
-    page = new TpAngular2Page();
+    page = new TpAngularPage();
   });
 
   it('should display welcome message', done => {

@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class TpAngular2Page {
+export class TpAngularPage {
   navigateTo() {
     return browser.get('/');
   }

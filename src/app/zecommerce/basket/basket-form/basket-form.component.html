@@ -1,0 +1,17 @@
+<form (submit)="checkoutHandler()" #customerForm="ngForm" novalidate>
+  <div class="form-group" [class.has-error]="ccInput.dirty && ccInput.invalid">
+    <label for="name">Nom</label>
+    <input type="text" class="form-control"  #nameInput="ngModel" name="name" [(ngModel)]="customer.name" placeholder="John Doe" required/>
+  </div>
+  <div class="form-group" [class.has-error]="ccInput.dirty && ccInput.invalid">
+    <label for="name">Adresse</label>
+    <textarea class="form-control"  name="adresse" #addressInput="ngModel" [(ngModel)]="customer.address" placeholder="Adresse" required></textarea>
+  </div>
+  <div class="form-group" [class.has-error]="ccInput.dirty && ccInput.invalid">
+    <label for="name">Carte de crédit</label>
+    <input type="text" class="form-control"  #ccInput="ngModel" name="cc" [(ngModel)]="customer.creditCard" placeholder="123-456" pattern="^[0-9]{3}-[0-9]{3}$" required/>
+    <span class="help-block" [hidden]="ccInput.dirty && ccInput.invalid">Invalid pattern. Example: 123-456</span>
+  </div>
+
+  <button type="submit" class="btn btn-default" [disabled]="customerForm.invalid">Checkout</button>
+</form>
